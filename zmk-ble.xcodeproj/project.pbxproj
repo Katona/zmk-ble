@@ -20,6 +20,7 @@
 		91CAC49E2846A14100F70F2E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		91CAC4A12846A14100F70F2E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		91CAC4A32846A14100F70F2E /* zmk_ble.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = zmk_ble.entitlements; sourceTree = "<group>"; };
+		91CAC4A92846A50300F70F2E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +53,7 @@
 		91CAC4992846A13F00F70F2E /* zmk-ble */ = {
 			isa = PBXGroup;
 			children = (
+				91CAC4A92846A50300F70F2E /* Info.plist */,
 				91CAC49A2846A13F00F70F2E /* zmk_bleApp.swift */,
 				91CAC49C2846A13F00F70F2E /* ContentView.swift */,
 				91CAC49E2846A14100F70F2E /* Assets.xcassets */,
@@ -266,13 +268,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zmk-ble/zmk_ble.entitlements";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"zmk-ble/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = "zmk-ble/Info.plist";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "What is it";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -291,13 +295,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "zmk-ble/zmk_ble.entitlements";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"zmk-ble/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = "zmk-ble/Info.plist";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "What is it";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
