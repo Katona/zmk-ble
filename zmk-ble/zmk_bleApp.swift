@@ -68,10 +68,27 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
     
 }
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    private var statusItem: NSStatusItem!
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        print("haho");
+        // 2
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        // 3
+        if let button = statusItem.button {
+            button.image = NSImage(systemSymbolName: "1.circle", accessibilityDescription: "1")
+        }
+    }
+}
+
 @main
 struct zmk_bleApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate;
+
     private var cbManager: CBCentralManager
     private var dummyDelegate: DummyDelegate = DummyDelegate()
+
     
     var body: some Scene {
         WindowGroup {
@@ -82,5 +99,6 @@ struct zmk_bleApp: App {
         let log = Logger()
         log.info("Init")
         cbManager = CBCentralManager(delegate: dummyDelegate, queue: nil)
+
     }
 }
