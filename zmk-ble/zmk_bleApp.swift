@@ -47,6 +47,7 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
     private var logger: Logger = Logger();
     private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
     private var peripheral: CBPeripheral?
+    private var zmkPeripheral: ZmkPeripheral?
 
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -56,20 +57,23 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
         peripherals.forEach({ p in
             peripheral = p
             logger.info("\(p.identifier)")
-            p.delegate = peripheralDelegate
+//            p.delegate = peripheralDelegate
             central.connect(p)
             
         })
     }
+    
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         logger.info("connected to \(peripheral.description)")
-        peripheral.discoverServices([CBUUID(string: "180F")])
+//        peripheral.discoverServices([CBUUID(string: "180F")])
+        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral)
     }
     
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
+    private var popover: NSPopover!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         print("haho");
@@ -78,6 +82,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // 3
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "1.circle", accessibilityDescription: "1")
+            button.action = #selector(togglePopover)
+        }
+        
+        self.popover = NSPopover()
+        self.popover.behavior = .transient
+        self.popover.contentViewController = NSHostingController(rootView: ContentView())
+    }
+    
+    @objc func togglePopover() {
+        if let button = statusItem.button {
+            if popover.isShown {
+                self.popover.performClose(nil)
+            } else {
+                self.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+            }
         }
     }
 }
