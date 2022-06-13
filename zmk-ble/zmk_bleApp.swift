@@ -44,6 +44,8 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
 
 class DummyDelegate: NSObject, CBCentralManagerDelegate {
 
+    private let batteryServiceUuid = CBUUID(string: "180F")
+    
     private var logger: Logger = Logger();
     private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
     private var peripheral: CBPeripheral?
@@ -53,20 +55,39 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.info("centralManagerDidUpdateState");
         logger.info("\(central.state.rawValue)");
-        let peripherals = central.retrieveConnectedPeripherals(withServices: [CBUUID(string: "180F")])
+        let peripherals = central.retrieveConnectedPeripherals(withServices: [batteryServiceUuid])
         peripherals.forEach({ p in
             peripheral = p
             logger.info("\(p.identifier)")
-//            p.delegate = peripheralDelegate
             central.connect(p)
-            
         })
+        if (peripherals.isEmpty) {
+            logger.info("scanning")
+            central.scanForPeripherals(withServices: [batteryServiceUuid])
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         logger.info("connected to \(peripheral.description)")
-//        peripheral.discoverServices([CBUUID(string: "180F")])
         self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral)
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        logger.info("didDisconnectPeripheral")
+        if self.peripheral == peripheral {
+            logger.info("ZMK peripheral disconnected.")
+            central.scanForPeripherals(withServices: [batteryServiceUuid])
+            self.peripheral = nil
+            self.zmkPeripheral = nil
+        }
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        logger.info("discovered \(peripheral)")
+        central.stopScan()
+        self.peripheral = peripheral
+        central.connect(peripheral)
     }
     
 }
@@ -76,10 +97,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var popover: NSPopover!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("haho");
-        // 2
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        // 3
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "1.circle", accessibilityDescription: "1")
             button.action = #selector(togglePopover)
