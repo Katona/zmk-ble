@@ -44,7 +44,7 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
 
 class DummyDelegate: NSObject, CBCentralManagerDelegate {
 
-    private let batteryServiceUuid = CBUUID(string: "180F")
+    private let hidServiceUuid = CBUUID(string: "1812")
     
     private var logger: Logger = Logger();
     private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
@@ -55,7 +55,7 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.info("centralManagerDidUpdateState");
         logger.info("\(central.state.rawValue)");
-        let peripherals = central.retrieveConnectedPeripherals(withServices: [batteryServiceUuid])
+        let peripherals = central.retrieveConnectedPeripherals(withServices: [hidServiceUuid])
         peripherals.forEach({ p in
             peripheral = p
             logger.info("\(p.identifier)")
@@ -63,7 +63,7 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
         })
         if (peripherals.isEmpty) {
             logger.info("scanning")
-            central.scanForPeripherals(withServices: [batteryServiceUuid])
+                central.scanForPeripherals(withServices: [hidServiceUuid])
         }
     }
     
@@ -76,7 +76,7 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
         logger.info("didDisconnectPeripheral")
         if self.peripheral == peripheral {
             logger.info("ZMK peripheral disconnected.")
-            central.scanForPeripherals(withServices: [batteryServiceUuid])
+            central.scanForPeripherals(withServices: [hidServiceUuid])
             self.peripheral = nil
             self.zmkPeripheral = nil
         }
