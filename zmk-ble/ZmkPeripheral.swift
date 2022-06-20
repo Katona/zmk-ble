@@ -51,7 +51,6 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
         guard let descriptor = characteristic.descriptors?.first(where: {d in d.uuid.uuidString == CBUUIDCharacteristicUserDescriptionString}) else {
             return
         }
-        logger.info("descriptor")
         guard let descriptorValue = getUserDescription(for: descriptor) else {
             return
         }
@@ -65,7 +64,7 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
         if (descriptorValue == "Central") {
             centralBatteryLevel = batteryLevel;
         } else if (descriptorValue == "Peripheral") {
-            peripheral = batteryLevel;
+            peripheralBatteryLevel = batteryLevel;
         }
         logger.info("\(descriptorValue) battery level: \(batteryLevel)")
     }
