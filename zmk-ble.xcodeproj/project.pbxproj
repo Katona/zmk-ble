@@ -280,6 +280,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "zmk-ble/Info.plist";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Test 2";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "What is it";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,6 +308,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "zmk-ble/Info.plist";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Test 2";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "What is it";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
