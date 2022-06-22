@@ -30,7 +30,6 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
     }
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         logger.info("didUpdateValueForCharacteristic")
-//        logger.info("\(characteristic.value)")
         guard let firstByte = characteristic.value?.first else {
             // handle unexpected empty data
             return
@@ -92,9 +91,20 @@ class DummyDelegate: NSObject, CBCentralManagerDelegate {
     
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
+    private let hidServiceUuid = CBUUID(string: "1812")
+    
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
+    
+    
+    private var logger: Logger = Logger();
+    private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
+    private var peripheral: CBPeripheral?
+    private var zmkPeripheral: ZmkPeripheral?
+    
+    private var cbManager: CBCentralManager?
+
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -105,7 +115,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         self.popover = NSPopover()
         self.popover.behavior = .transient
-        self.popover.contentViewController = NSHostingController(rootView: ContentView())
+        self.cbManager = CBCentralManager(delegate: self, queue: nil)
     }
     
     @objc func togglePopover() {
@@ -117,25 +127,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        logger.info("centralManagerDidUpdateState");
+        logger.info("\(central.state.rawValue)");
+        let peripherals = central.retrieveConnectedPeripherals(withServices: [hidServiceUuid])
+        peripherals.forEach({ p in
+            peripheral = p
+            logger.info("\(p.identifier)")
+            central.connect(p)
+        })
+        if (peripherals.isEmpty) {
+            logger.info("scanning")
+                central.scanForPeripherals(withServices: [hidServiceUuid])
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        logger.info("connected to \(peripheral.description)")
+        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral)
+        self.popover.contentViewController = NSHostingController(rootView: ContentView(self.zmkPeripheral!))
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        logger.info("didDisconnectPeripheral")
+        if self.peripheral == peripheral {
+            logger.info("ZMK peripheral disconnected.")
+            central.scanForPeripherals(withServices: [hidServiceUuid])
+            self.peripheral = nil
+            self.zmkPeripheral = nil
+        }
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        logger.info("discovered \(peripheral)")
+        central.stopScan()
+        self.peripheral = peripheral
+        central.connect(peripheral)
+    }
 }
 
 @main
 struct zmk_bleApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate;
 
-    private var cbManager: CBCentralManager
-    private var dummyDelegate: DummyDelegate = DummyDelegate()
-
     
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        // We don't need any windows, we want our app to be shown in the menubar only, see https://stackoverflow.com/questions/68305958/creating-a-macos-windowless-menu-bar-application-with-swiftui
+        Settings {
+            EmptyView()
         }
     }
     init() {
         let log = Logger()
         log.info("Init")
-        cbManager = CBCentralManager(delegate: dummyDelegate, queue: nil)
 
     }
 }

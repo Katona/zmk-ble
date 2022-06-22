@@ -18,9 +18,9 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
     private let logger: Logger = Logger();
     
     @Published
-    private var centralBatteryLevel: UInt8 = 0
+    var centralBatteryLevel: UInt8 = 0
     @Published
-    private var peripheralBatteryLevel: UInt8 = 0
+    var peripheralBatteryLevel: UInt8 = 0
     
     init(cbPeripheral: CBPeripheral) {
         super.init()
