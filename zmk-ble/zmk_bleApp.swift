@@ -109,7 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "1.circle", accessibilityDescription: "1")
+            button.image = NSImage(named: "zmk_logo")
             button.action = #selector(togglePopover)
         }
         

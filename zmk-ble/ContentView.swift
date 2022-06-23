@@ -15,11 +15,23 @@ struct ContentView: View {
     }
     var body: some View {
         VStack(alignment: .leading) {
-            HStack() {
-                Text("C: \(peripheral.centralBatteryLevel)%")
-                Text("P: \(peripheral.peripheralBatteryLevel)%")
+            HStack(spacing: 15) {
+                Image(systemName: "keyboard").resizable().aspectRatio(contentMode: .fit).frame(height:30)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Corne").bold()
+                    HStack {
+                        HStack(spacing: 4) {
+                            Text("C").font(.system(size: 10)).padding(4).foregroundColor(Color.white).background(Color.black.opacity(0.6)).clipShape(Circle())
+                            Text("\(peripheral.centralBatteryLevel)%")
+                        }
+                        HStack(spacing: 4) {
+                            Text("P").font(.system(size: 10)).padding(4).foregroundColor(Color.white).background(Color.black.opacity(0.6)).clipShape(Circle())
+                            Text("\(peripheral.peripheralBatteryLevel)%")
+                        }
+                    }
+                }
             }
-        }.padding()
+        }.padding(15)
     }
 }
 
