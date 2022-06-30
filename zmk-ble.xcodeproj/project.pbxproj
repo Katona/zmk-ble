@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9163D30C286A06C10041A1C7 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = 9163D30B286A06C10041A1C7 /* Charts */; };
+		9163D311286E30B00041A1C7 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9163D310286E30B00041A1C7 /* LineChartView.swift */; };
 		9175EA98285380CD00A46D6D /* ZmkPeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9175EA97285380CD00A46D6D /* ZmkPeripheral.swift */; };
 		91CAC49B2846A13F00F70F2E /* zmk_bleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CAC49A2846A13F00F70F2E /* zmk_bleApp.swift */; };
 		91CAC49D2846A13F00F70F2E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CAC49C2846A13F00F70F2E /* ContentView.swift */; };
@@ -15,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9163D310286E30B00041A1C7 /* LineChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
 		9175EA97285380CD00A46D6D /* ZmkPeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZmkPeripheral.swift; sourceTree = "<group>"; };
 		91CAC4972846A13F00F70F2E /* zmk-ble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "zmk-ble.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CAC49A2846A13F00F70F2E /* zmk_bleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = zmk_bleApp.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9163D30C286A06C10041A1C7 /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +66,7 @@
 				91CAC4A32846A14100F70F2E /* zmk_ble.entitlements */,
 				91CAC4A02846A14100F70F2E /* Preview Content */,
 				9175EA97285380CD00A46D6D /* ZmkPeripheral.swift */,
+				9163D310286E30B00041A1C7 /* LineChartView.swift */,
 			);
 			path = "zmk-ble";
 			sourceTree = "<group>";
@@ -90,6 +95,9 @@
 			dependencies = (
 			);
 			name = "zmk-ble";
+			packageProductDependencies = (
+				9163D30B286A06C10041A1C7 /* Charts */,
+			);
 			productName = "zmk-ble";
 			productReference = 91CAC4972846A13F00F70F2E /* zmk-ble.app */;
 			productType = "com.apple.product-type.application";
@@ -118,6 +126,9 @@
 				Base,
 			);
 			mainGroup = 91CAC48E2846A13F00F70F2E;
+			packageReferences = (
+				9163D30A286A06C10041A1C7 /* XCRemoteSwiftPackageReference "Charts" */,
+			);
 			productRefGroup = 91CAC4982846A13F00F70F2E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -147,6 +158,7 @@
 				91CAC49D2846A13F00F70F2E /* ContentView.swift in Sources */,
 				9175EA98285380CD00A46D6D /* ZmkPeripheral.swift in Sources */,
 				91CAC49B2846A13F00F70F2E /* zmk_bleApp.swift in Sources */,
+				9163D311286E30B00041A1C7 /* LineChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,6 +356,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9163D30A286A06C10041A1C7 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9163D30B286A06C10041A1C7 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9163D30A286A06C10041A1C7 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 91CAC48F2846A13F00F70F2E /* Project object */;
 }

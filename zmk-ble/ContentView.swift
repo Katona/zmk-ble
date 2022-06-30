@@ -31,6 +31,7 @@ struct ContentView: View {
                     }
                 }
             }
+            BatteryHistoryView(entries: peripheral.batteryHistory)
         }.padding(15)
     }
 }

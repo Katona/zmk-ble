@@ -9,6 +9,11 @@ import Foundation
 import CoreBluetooth
 import OSLog
 
+struct HistoricalBatteryValue {
+    let date: Date
+    let central: UInt8
+    let peripheral: UInt8
+}
 
 class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
     private let uuidBatteryService = CBUUID(string: "180F")
@@ -21,6 +26,8 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
     var centralBatteryLevel: UInt8 = 0
     @Published
     var peripheralBatteryLevel: UInt8 = 0
+    @Published
+    var batteryHistory: [HistoricalBatteryValue] = []
     
     init(cbPeripheral: CBPeripheral) {
         super.init()
@@ -66,6 +73,7 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
         } else if (descriptorValue == "Peripheral") {
             peripheralBatteryLevel = batteryLevel;
         }
+        batteryHistory.append(HistoricalBatteryValue(date: Date(), central: centralBatteryLevel, peripheral: peripheralBatteryLevel))
         logger.info("\(descriptorValue) battery level: \(batteryLevel)")
     }
     
