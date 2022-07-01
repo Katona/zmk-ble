@@ -41,56 +41,6 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
     
 }
 
-class DummyDelegate: NSObject, CBCentralManagerDelegate {
-
-    private let hidServiceUuid = CBUUID(string: "1812")
-    
-    private var logger: Logger = Logger();
-    private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
-    private var peripheral: CBPeripheral?
-    private var zmkPeripheral: ZmkPeripheral?
-
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        logger.info("centralManagerDidUpdateState");
-        logger.info("\(central.state.rawValue)");
-        let peripherals = central.retrieveConnectedPeripherals(withServices: [hidServiceUuid])
-        peripherals.forEach({ p in
-            peripheral = p
-            logger.info("\(p.identifier)")
-            central.connect(p)
-        })
-        if (peripherals.isEmpty) {
-            logger.info("scanning")
-                central.scanForPeripherals(withServices: [hidServiceUuid])
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        logger.info("connected to \(peripheral.description)")
-        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral)
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        logger.info("didDisconnectPeripheral")
-        if self.peripheral == peripheral {
-            logger.info("ZMK peripheral disconnected.")
-            central.scanForPeripherals(withServices: [hidServiceUuid])
-            self.peripheral = nil
-            self.zmkPeripheral = nil
-        }
-        
-    }
-    
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        logger.info("discovered \(peripheral)")
-        central.stopScan()
-        self.peripheral = peripheral
-        central.connect(peripheral)
-    }
-    
-}
-
 class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
     private let hidServiceUuid = CBUUID(string: "1812")
     
@@ -144,8 +94,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        logger.info("connected to \(peripheral.description)")
-        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral)
+        logger.info("connected to \(peripheral.name!.description)")
+        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral, batteryHistory: zmkPeripheral?.batteryHistory ?? [])
         self.popover.contentViewController = NSHostingController(rootView: ContentView(self.zmkPeripheral!))
     }
     
@@ -154,10 +104,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
         if self.peripheral == peripheral {
             logger.info("ZMK peripheral disconnected.")
             central.scanForPeripherals(withServices: [hidServiceUuid])
-            self.peripheral = nil
-            self.zmkPeripheral = nil
         }
-        
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
