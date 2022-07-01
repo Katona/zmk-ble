@@ -18,7 +18,7 @@ struct ContentView: View {
             HStack(spacing: 15) {
                 Image(systemName: "keyboard").resizable().aspectRatio(contentMode: .fit).frame(height:30)
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("Corne").bold()
+                    Text(peripheral.name).bold()
                     HStack {
                         HStack(spacing: 4) {
                             Text("C").font(.system(size: 10)).padding(4).foregroundColor(Color.white).background(Color.black.opacity(0.6)).clipShape(Circle())
