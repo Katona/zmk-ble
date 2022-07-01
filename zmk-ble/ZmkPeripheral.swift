@@ -28,12 +28,16 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
     var peripheralBatteryLevel: UInt8 = 0
     @Published
     var batteryHistory: [HistoricalBatteryValue] = []
+    var name: String {
+        return cbPeripheral.name!.description
+    }
     
-    init(cbPeripheral: CBPeripheral) {
+    init(cbPeripheral: CBPeripheral, batteryHistory: [HistoricalBatteryValue]) {
         super.init()
         self.cbPeripheral = cbPeripheral
         self.cbPeripheral.delegate = self;
         self.cbPeripheral.discoverServices([uuidBatteryService])
+        self.batteryHistory = batteryHistory
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
