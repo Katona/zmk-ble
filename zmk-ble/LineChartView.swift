@@ -23,16 +23,14 @@ struct BatteryHistoryView: NSViewRepresentable {
     func updateNSView(_ nsView: LineChartView, context: Context) {
         let centralDataSet = LineChartDataSet(entries: entries.map({ e in ChartDataEntry(x: e.date.timeIntervalSince1970, y: Double(e.central))}), label: "Central")
         centralDataSet.colors = [.red]
-        centralDataSet.drawCircleHoleEnabled = false
+        centralDataSet.drawCirclesEnabled = false
         centralDataSet.drawValuesEnabled = false
-        centralDataSet.circleColors = [.red]
-        centralDataSet.circleRadius = 2
+        centralDataSet.mode = .horizontalBezier
         let peripheralDataSet = LineChartDataSet(entries: entries.map({ e in ChartDataEntry(x: e.date.timeIntervalSince1970, y: Double(e.peripheral))}), label: "Peripheral")
         peripheralDataSet.colors = [.green]
-        peripheralDataSet.drawCircleHoleEnabled = false
+        peripheralDataSet.drawCirclesEnabled = false
         peripheralDataSet.drawValuesEnabled = false
-        peripheralDataSet.circleColors = [.green]
-        peripheralDataSet.circleRadius = 2
+        peripheralDataSet.mode = .horizontalBezier
         let chartData = LineChartData(dataSets: [centralDataSet, peripheralDataSet])
         nsView.data = chartData
     }
