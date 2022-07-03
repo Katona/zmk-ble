@@ -95,7 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         logger.info("connected to \(peripheral.name!.description)")
-        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral, batteryHistory: zmkPeripheral?.batteryHistory ?? [])
+        self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral, optionalZmkPeripheral: self.zmkPeripheral)
         self.popover.contentViewController = NSHostingController(rootView: ContentView(self.zmkPeripheral!))
     }
     

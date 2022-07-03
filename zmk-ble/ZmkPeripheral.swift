@@ -16,6 +16,10 @@ struct HistoricalBatteryValue {
 }
 
 class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
+    
+    // Indicates that null battery level value meaning it has not been sampled yet.
+    private static let NULL_VALUE: UInt8 = 0xFF
+    
     private let uuidBatteryService = CBUUID(string: "180F")
     private let uuidBatteryLevelCharacteristic = CBUUID(string: "2A19")
     
@@ -28,16 +32,20 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
     var peripheralBatteryLevel: UInt8 = 0
     @Published
     var batteryHistory: [HistoricalBatteryValue] = []
+    
     var name: String {
         return cbPeripheral.name!.description
     }
     
-    init(cbPeripheral: CBPeripheral, batteryHistory: [HistoricalBatteryValue]) {
+    init(cbPeripheral: CBPeripheral, optionalZmkPeripheral: ZmkPeripheral?) {
         super.init()
         self.cbPeripheral = cbPeripheral
         self.cbPeripheral.delegate = self;
         self.cbPeripheral.discoverServices([uuidBatteryService])
-        self.batteryHistory = batteryHistory
+        guard let zmkPeripheral = optionalZmkPeripheral else { return }
+        self.batteryHistory = zmkPeripheral.batteryHistory
+        self.centralBatteryLevel = zmkPeripheral.centralBatteryLevel
+        self.peripheralBatteryLevel = zmkPeripheral.peripheralBatteryLevel
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -71,6 +79,8 @@ class ZmkPeripheral: NSObject, CBPeripheralDelegate, ObservableObject {
             return
         }
         let batteryLevel = firstByte
+      
+        if (batteryLevel == ZmkPeripheral.NULL_VALUE) { return }
         
         if (descriptorValue == "Central") {
             centralBatteryLevel = batteryLevel;
