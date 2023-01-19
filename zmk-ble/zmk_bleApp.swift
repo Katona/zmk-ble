@@ -20,7 +20,7 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
             peripheral.discoverCharacteristics([CBUUID(string: "2A19")], for: batteryService!)
         }
     }
-    
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         logger.info("didDiscoverCharacteristics")
         service.characteristics?.forEach({characteristics in
@@ -36,38 +36,41 @@ class PeripheralDelegate : NSObject, CBPeripheralDelegate {
         }
         let batteryLevel = firstByte
         print("battery level:", batteryLevel)
-        
+
     }
-    
+
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
     private let hidServiceUuid = CBUUID(string: "1812")
-    
+
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
-    
-    
+
+
     private var logger: Logger = Logger();
     private var peripheralDelegate: CBPeripheralDelegate = PeripheralDelegate()
     private var peripheral: CBPeripheral?
     private var zmkPeripheral: ZmkPeripheral?
-    
+
     private var cbManager: CBCentralManager?
 
-    
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem.button {
-            button.image = NSImage(named: "zmk_logo")
+            let statusItemImage = NSImage(named: "zmk_logo")
+            statusItemImage?.isTemplate = true
+
+            button.image = statusItemImage
             button.action = #selector(togglePopover)
         }
-        
+
         self.popover = NSPopover()
         self.popover.behavior = .transient
         self.cbManager = CBCentralManager(delegate: self, queue: nil)
     }
-    
+
     @objc func togglePopover() {
         if let button = statusItem.button {
             if popover.isShown {
@@ -77,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
             }
         }
     }
-    
+
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         logger.info("centralManagerDidUpdateState");
         logger.info("\(central.state.rawValue)");
@@ -92,13 +95,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
                 central.scanForPeripherals(withServices: [hidServiceUuid])
         }
     }
-    
+
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         logger.info("connected to \(peripheral.name!.description)")
         self.zmkPeripheral = ZmkPeripheral(cbPeripheral: peripheral, optionalZmkPeripheral: self.zmkPeripheral)
         self.popover.contentViewController = NSHostingController(rootView: ContentView(self.zmkPeripheral!))
     }
-    
+
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         logger.info("didDisconnectPeripheral")
         if self.peripheral == peripheral {
@@ -106,7 +109,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
             central.scanForPeripherals(withServices: [hidServiceUuid])
         }
     }
-    
+
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         logger.info("discovered \(peripheral)")
         central.stopScan()
@@ -119,7 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, CBCentralManagerDelegate {
 struct zmk_bleApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate;
 
-    
+
     var body: some Scene {
         // We don't need any windows, we want our app to be shown in the menubar only, see https://stackoverflow.com/questions/68305958/creating-a-macos-windowless-menu-bar-application-with-swiftui
         Settings {
