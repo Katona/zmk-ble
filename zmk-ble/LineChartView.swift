@@ -13,7 +13,6 @@ struct BatteryHistoryView: NSViewRepresentable {
     let entries: [HistoricalBatteryValue]
     func makeNSView(context: Context) -> LineChartView {
         let view = LineChartView()
-        view.backgroundColor = .white
         view.rightAxis.enabled = false
         view.rightAxis.axisMinimum = 0
         view.xAxis.drawLabelsEnabled = false
